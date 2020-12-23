@@ -15,7 +15,7 @@
           <el-date-picker v-model="dataform.regdate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item>
-           <el-button type="primary">确定</el-button>
+           <el-button type="primary" @click="submitForm()">确定</el-button>
            <el-button>取消</el-button>
          </el-form-item>
       </el-form>
@@ -76,6 +76,26 @@ export default {
 
   },
   methods: {
+    submitForm() {
+      this.axios.post('reader/readerList/', {
+        name: this.dataform.readername,
+        phone: this.dataform.readerphone,
+        regdate: this.$moment(this.dataform.regdate).format("YYYY-MM-DD")
+      }).then((response) => {
+        if(response.data['status'] == 0) {
+          this.$message({
+            type: 'success',
+            message: response.data['message']
+          })
+        }else {
+          this.$message({
+            type: 'danger',
+            message: response.data['message']
+          })
+        }
+      })
+
+    },
 
   }
 }

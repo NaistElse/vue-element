@@ -14,7 +14,7 @@
                 <span>{{ props.row.name }}</span>
               </el-form-item>
               <el-form-item label="图书作者">
-                <span>{{ props.row.author }}</span>
+                <span>{{ props.row.author_name }}</span>
               </el-form-item>
               <el-form-item label="图书ID">
                 <span>{{ props.row.id }}</span>
@@ -23,10 +23,10 @@
                 <span>{{ props.row.isbn }}</span>
               </el-form-item>
               <el-form-item label="所属分类">
-                <span>{{ props.row.category }}</span>
+                <span>{{ props.row.category_name }}</span>
               </el-form-item>
               <el-form-item label="出版社">
-                <span>{{ props.row.publisher }}</span>
+                <span>{{ props.row.publisher_name }}</span>
               </el-form-item>
               <el-form-item label="图书价格">
                 <span>{{ props.row.price }}</span>
@@ -39,8 +39,8 @@
         </el-table-column>
         <el-table-column width=50 label="#" prop="id"></el-table-column>
         <el-table-column width=200 label="图书" prop="name"></el-table-column>
-        <el-table-column width=180 label="作者" prop="author"></el-table-column>
-        <el-table-column width=180 label="藏书位置" prop="position"></el-table-column>
+        <el-table-column width=180 label="作者" prop="author_name"></el-table-column>
+        <el-table-column width=180 label="藏书位置" prop="position_name"></el-table-column>
         <el-table-column width=90 label="库存" prop="count"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -68,14 +68,14 @@
             <el-input v-model="selectTable.name"></el-input>
           </el-form-item>
           <el-form-item label="图书作者">
-            <el-input v-model="selectTable.author"></el-input>
+            <el-input v-model="selectTable.author_name"></el-input>
           </el-form-item>
           <el-form-item label="图书种类/出版社">
-            <el-select v-model="selectTable.category" placeholder="请选择图书种类">
+            <el-select v-model="selectTable.category_name" placeholder="请选择图书种类">
               <el-option label="计算机" value="computer"></el-option>
               <el-option label="医学" value="doctor"></el-option>
             </el-select>
-            <el-select v-model="selectTable.publisher" placeholder="请选择图书出版社">
+            <el-select v-model="selectTable.publisher_name" placeholder="请选择图书出版社">
               <el-option label="人民出版社" value="renmin"></el-option>
               <el-option label="北京大学出版社" value="beijing"></el-option>
             </el-select>
@@ -133,13 +133,13 @@ export default {
         {
           id: 1,
           name: '计算机算法设计与分析',
-          author: '王晓东',
-          publisher: '电子工业出版社',
-          category: '计算机',
+          author_name: '王晓东',
+          publisher_name: '电子工业出版社',
+          category_name: '计算机',
           isbn: '978-7-121-34439-8',
           price: 52,
           desc: '本书是“十二五”普通高等教育本科国家级规划教材和国家精品课程教材。',
-          position: '总馆-采访编目室',
+          position_name: '总馆-采访编目室',
           count: 23
         },
         {
@@ -200,6 +200,7 @@ export default {
   },
   created() {
     //do something after creating vue instance
+    this.getBookList()
 
   },
   components: {
@@ -220,13 +221,20 @@ export default {
           if(operat == 'editInfo') {
             this.selectTable = item
           }else if(operat == 'editCount') {
-            this.selectCount.position = item.position
+            this.selectCount.position = item.position_name
             this.selectCount.count = item.count
           }
         }
       })
     },
-    
+    getBookList() {
+      this.axios.get('book/bookList/').then((response) => {
+        if(response.data['status'] == 0) {
+          this.datalist = JSON.parse(response.data['book'])
+        }
+      })
+
+    }
   }
 }
 

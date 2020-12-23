@@ -51,5 +51,11 @@ module.exports = {
           }
         }
 
-      }
+      },
+      performance: {
+       hints: "warning",
+       maxAssetSize: 30000000, // 整数类型（以字节为单位）
+       maxEntrypointSize: 50000000, // 整数类型（以字节为单位）
+       assetFilter: (assetFilename) => { assetFilename.endsWith('.css') || assetFilename.endsWith('.js') }
+     }
 }

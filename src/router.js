@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 
 //import home from './pages/home.vue'
 const home = r => require.ensure([], () => r(require('./pages/home.vue')), 'home')
+const login = r => require.ensure([], () => r(require('./pages/login.vue')), 'login')
+const reg = r => require.ensure([], () => r(require('./pages/register.vue')), 'reg')
 const readerList = r => require.ensure([], () => r(require('./pages/readerList.vue')), 'readerList')
 const bookList = r => require.ensure([], () => r(require('./pages/bookList.vue')), 'bookList')
 const orderList = r => require.ensure([], () => r(require('./pages/orderList.vue')), 'orderList')
@@ -15,7 +17,15 @@ var router = new VueRouter({
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/login'
+    },
+    {
+      path: '/login',
+      component: login
+    },
+    {
+      path: '/reg',
+      component: reg
     },
     {
       path: '/home',
@@ -52,6 +62,22 @@ var router = new VueRouter({
 
 
   ],
+})
+
+
+// 导航守卫
+// 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    next()
+  } else {
+    let token = localStorage.getItem('token')
+    if (!token) {
+      next({path: '/login'})
+    } else {
+      next()
+    }
+  }
 })
 
 export default router
