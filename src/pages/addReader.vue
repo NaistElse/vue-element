@@ -87,6 +87,7 @@ export default {
             type: 'success',
             message: response.data['message']
           })
+          this.$router.go(0)
         }else {
           this.$message({
             type: 'danger',

@@ -13,8 +13,8 @@
                          filter-placement="bottom-end">
           <template slot-scope="scope">
           <el-tag
-              :type="scope.row.status === 0 ? 'success' : 'danger'"
-              disable-transitions>{{scope.row.status === 0 ? '未借阅' : '借阅中'}}</el-tag>
+              :type="scope.row.status === false ? 'success' : 'danger'"
+              disable-transitions>{{scope.row.status === false ? '未借阅' : '借阅中'}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -29,8 +29,12 @@
 
       <el-pagination class="pagination"
         background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pagesize"
         layout="prev, pager, next"
-        :total="100">
+        :total="count">
       </el-pagination>
 
     </div>
@@ -49,44 +53,10 @@ import headTop from'../components/headerTop.vue'
 export default{
   data() {
     return {
-      datalist: [
-        {
-          id: 1,
-          name: '小明',
-          phone: 1234332112,
-          regdate: '2019-10-21',
-          status: 0
-        },
-        {
-          id: 2,
-          name: '小明',
-          phone: 1234332112,
-          regdate: '2019-10-21',
-          status: 1
-        },
-        {
-          id: 3,
-          name: '小明',
-          phone: 1234332112,
-          regdate: '2019-10-21',
-          status: 0
-        },
-        {
-          id: 4,
-          name: '小明',
-          phone: 1234332112,
-          regdate: '2019-10-21',
-          status: 1
-        },
-        {
-          id: 6,
-          name: '小明',
-          phone: 1234332112,
-          regdate: '2019-10-21',
-          status: 0
-        }
-      ]
-
+      datalist: [],
+      count: 10,
+      currentPage: 1,
+      pagesize: 0
     }
   },
   components: {
@@ -101,14 +71,24 @@ export default{
         return row.tag === value
     },
     getReaderList() {
-      this.axios.get('reader/readerList/').then((response) => {
+      this.axios.get('reader/readerList/', {params: {page: this.currentPage}}).then((response) => {
         //console.log(response.data['readers'])
         if(response.data['status'] == 0) {
           this.datalist = JSON.parse(response.data['readers'])
+          this.count = response.data['count']
+          this.pagesize = response.data['page_size']
         }
 
       })
-    }
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getReaderList()
+    },
+
   }
 }
 </script>
