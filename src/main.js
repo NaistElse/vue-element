@@ -27,6 +27,9 @@ Vue.use(VueAxios, Axios)
 import moment from 'moment'
 Vue.prototype.$moment = moment
 
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 
 
 const store = new Vuex.Store({

@@ -13,10 +13,12 @@
   "dependencies": {
     "axios": "^0.21.0",
     "cnpm": "^6.1.1",
+    "echarts": "^4.8.0",
     "element-ui": "^2.14.0",
     "moment": "^2.29.1",
     "vue": "^2.5.21",
     "vue-axios": "^2.1.4",
+    "vue-quill-editor": "^3.0.6",
     "vuex": "^3.6.0"
   },
   "devDependencies": {

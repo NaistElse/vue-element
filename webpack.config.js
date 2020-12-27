@@ -5,7 +5,8 @@ var htmlWebpackPlugin = require('html-webpack-plugin')
 var VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 // 导出一个配置对象，将来webpack在启动的时候，会默认来查找webpack.config.js，并读取这个文件中导出的配置对象，来进行打包处理
-module.exports = {
+module.exports = {  
+    mode: 'development',
     entry: path.join(__dirname, './src/main.js'), // 项目入口文件
     output: { // 配置输出选项
         path: path.join(__dirname, './dist'), // 配置输出的路径

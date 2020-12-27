@@ -4,7 +4,7 @@
 
     <div class="order-contain">
       <el-table :data="datalist" style="width: 100%">
-        <el-table-column label="#" prop="id"></el-table-column>
+        <el-table-column label="#" prop="order_id"></el-table-column>
         <el-table-column label="读者姓名" prop="borrow_name"></el-table-column>
         <el-table-column label="借阅书籍" prop="borrow_book"></el-table-column>
         <el-table-column label="借阅时间" prop="borrow_date"></el-table-column>
@@ -14,8 +14,8 @@
                          :filter-method="filterStatus" filter-placement="bottom-end">
            <template slot-scope="scope">
            <el-tag
-               :type="scope.row.return_date ? 'success' : 'danger'"
-               disable-transitions>{{scope.row.return_date ? '已完成' : '借阅中'}}</el-tag>
+               :type="scope.row.order_status ? 'success' : 'danger'"
+               disable-transitions>{{scope.row.order_status ? '已完成' : '借阅中'}}</el-tag>
            </template>
 
 
@@ -25,8 +25,12 @@
 
       <el-pagination class="pagination"
         background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pagesize"
         layout="prev, pager, next"
-        :total="100">
+        :total="count">
       </el-pagination>
 
     </div>
@@ -42,61 +46,16 @@ import headTop from '../components/headerTop.vue';
 export default {
   data() {
     return {
-      datalist: [
-        {
-          id: 1222,
-          borrow_name: "小明",
-          borrow_book: "编译原理",
-          borrow_date: "2020-10-22",
-          return_date: "2020-11-23",
-          remark: "无"
-        },
-        {
-          id: 1223,
-          borrow_name: "小明",
-          borrow_book: "计算机网络",
-          borrow_date: "2020-10-22",
-          return_date: "2020-11-23",
-          remark: "无"
-        },
-        {
-          id: 1224,
-          borrow_name: "小明",
-          borrow_book: "计算机算法与分析",
-          borrow_date: "2018-10-22",
-          return_date: "2020-11-23",
-          remark: "无"
-        },
-        {
-          id: 1225,
-          borrow_name: "小明",
-          borrow_book: "编译原理",
-          borrow_date: "2020-10-22",
-          return_date: "",
-          remark: "无"
-        },
-        {
-          id: 1226,
-          borrow_name: "小明",
-          borrow_book: "编译原理",
-          borrow_date: "2020-10-02",
-          return_date: "2020-11-23",
-          remark: "无"
-        },
-        {
-          id: 1227,
-          borrow_name: "小明",
-          borrow_book: "编译原理",
-          borrow_date: "2020-07-22",
-          return_date: "2020-11-23",
-          remark: "无"
-        }
-      ]
+      datalist: [],
+      count: 10,
+      currentPage: 1,
+      pagesize: 0
 
     }
   },
   created() {
     //do something after creating vue instance
+    this.getOrderList()
 
   },
   components: {
@@ -104,10 +63,29 @@ export default {
   },
   methods: {
     filterStatus(value, row) {
-      let status = row.return_date ? '已完成' : '借阅中'
+      let status = row.order_status ? '已完成' : '借阅中'
       return status === value
 
-    }
+    },
+    getOrderList() {
+      this.axios.get('order/orderlist/', {params: {page: this.currentPage}}).then((response) => {
+        //console.log(response.data['readers'])
+        if(response.data['status'] == 0) {
+          this.datalist = JSON.parse(response.data['orderlist'])
+          this.count = response.data['count']
+          this.pagesize = response.data['page_size']
+        }
+
+      })
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getOrderList()
+    },
+
   }
 }
 

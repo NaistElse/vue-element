@@ -3,7 +3,7 @@
 
     <el-header style="text-align: right; font-size: 12px; background-color: rgb(238, 241, 246)">
       <el-breadcrumb separator="/" class="daohang" separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/manage' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
       </el-breadcrumb>
       <el-dropdown>

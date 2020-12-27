@@ -55,8 +55,12 @@
 
       <el-pagination class="pagination"
         background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pagesize"
         layout="prev, pager, next"
-        :total="100">
+        :total="count">
       </el-pagination>
 
 
@@ -129,72 +133,14 @@ import headTop from '../components/headerTop.vue'
 export default {
   data() {
     return {
-      datalist: [
-        {
-          id: 1,
-          name: '计算机算法设计与分析',
-          author_name: '王晓东',
-          publisher_name: '电子工业出版社',
-          category_name: '计算机',
-          isbn: '978-7-121-34439-8',
-          price: 52,
-          desc: '本书是“十二五”普通高等教育本科国家级规划教材和国家精品课程教材。',
-          position_name: '总馆-采访编目室',
-          count: 23
-        },
-        {
-          id: 2,
-          name: '编译原理',
-          author: '王晓东',
-          publisher: '电子工业出版社',
-          category: '计算机',
-          isbn: '978-7-121-34439-8',
-          price: 32,
-          desc: '本书是“十二五”普通高等教育本科国家级规划教材和国家精品课程教材。',
-          position: '总馆-采访编目室',
-          count: 3
-        },
-        {
-          id: 3,
-          name: '计算机网络',
-          author: '王晓东',
-          publisher: '电子工业出版社',
-          category: '计算机',
-          isbn: '978-7-121-34439-8',
-          price: 22,
-          desc: '本书是“十二五”普通高等教育本科国家级规划教材和国家精品课程教材。',
-          position: '总馆-采访编目室',
-          count: 9
-        },
-        {
-          id: 4,
-          name: '计算机算法设计与分析',
-          author: '王晓东',
-          publisher: '电子工业出版社',
-          category: '计算机',
-          isbn: '978-7-121-34439-8',
-          price: 52,
-          desc: '本书是“十二五”普通高等教育本科国家级规划教材和国家精品课程教材。',
-          position: '总馆-采访编目室',
-          count: 23
-        },
-        {
-          id: 5,
-          name: '计算机算法设计与分析',
-          author: '王晓东',
-          publisher: '电子工业出版社',
-          category: '计算机',
-          isbn: '978-7-121-34439-8',
-          price: 52,
-          desc: '本书是“十二五”普通高等教育本科国家级规划教材和国家精品课程教材。',
-          position: '总馆-采访编目室',
-          count: 23
-        }
-      ],
+      datalist: [],
       dialogFormVisible: false,
       dialogCountVisible: false,
       selectTable: {},
-      selectCount: {}
+      selectCount: {},
+      count: 10,
+      currentPage: 1,
+      pagesize: 0
 
     }
   },
@@ -227,14 +173,24 @@ export default {
         }
       })
     },
-    getBookList() {
-      this.axios.get('book/bookList/').then((response) => {
+      getBookList() {
+      this.axios.get('book/bookList/', {params: {page: this.currentPage}}).then((response) => {
+        //console.log(response.data['readers'])
         if(response.data['status'] == 0) {
           this.datalist = JSON.parse(response.data['book'])
+          this.count = response.data['count']
+          this.pagesize = response.data['page_size']
         }
-      })
 
-    }
+      })
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getBookList()
+    },
   }
 }
 

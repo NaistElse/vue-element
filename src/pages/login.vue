@@ -66,7 +66,7 @@ export default {
           this.$router.push('home')
         }else {
           this.$message({
-            type: 'danger',
+            type: 'error',
             message: response.data['message']
           })
         }
